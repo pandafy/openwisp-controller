@@ -11,7 +11,7 @@ from openwisp_users.tests.utils import TestOrganizationMixin
 from openwisp_utils.tests import catch_signal
 
 from .. import settings as app_settings
-from ..signals import config_modified, config_status_changed
+from ..signals import config_status_changed
 from .utils import CreateConfigTemplateMixin, TestVpnX509Mixin
 
 Config = load_model('config', 'Config')
@@ -523,33 +523,33 @@ class TestConfig(
             handler.assert_not_called()
             self.assertEqual(c.status, 'modified')
 
-    def test_config_modified_sent(self):
-        org = self._get_org()
-        with catch_signal(config_modified) as handler:
-            c = self._create_config(organization=org, status='applied')
-            handler.assert_not_called()
-            self.assertEqual(c.status, 'applied')
+    # def test_config_modified_sent(self):
+    #     org = self._get_org()
+    #     with catch_signal(config_modified) as handler:
+    #         c = self._create_config(organization=org, status='applied')
+    #         handler.assert_not_called()
+    #         self.assertEqual(c.status, 'applied')
 
-        with catch_signal(config_modified) as handler:
-            c.config = {'general': {'description': 'test'}}
-            c.full_clean()
-            handler.assert_not_called()
-            self.assertEqual(c.status, 'modified')
+    #     with catch_signal(config_modified) as handler:
+    #         c.config = {'general': {'description': 'test'}}
+    #         c.full_clean()
+    #         handler.assert_not_called()
+    #         self.assertEqual(c.status, 'modified')
 
-        with catch_signal(config_modified) as handler:
-            c.save()
-            handler.assert_called_once_with(
-                sender=Config,
-                signal=config_modified,
-                instance=c,
-                device=c.device,
-                config=c,
-            )
-            self.assertEqual(c.status, 'modified')
+    #     with catch_signal(config_modified) as handler:
+    #         c.save()
+    #         handler.assert_called_once_with(
+    #             sender=Config,
+    #             signal=config_modified,
+    #             instance=c,
+    #             device=c.device,
+    #             config=c,
+    #         )
+    #         self.assertEqual(c.status, 'modified')
 
-        with catch_signal(config_modified) as handler:
-            c.config = {'general': {'description': 'changed again'}}
-            c.full_clean()
-            c.save()
-            handler.assert_called_once()
-            self.assertEqual(c.status, 'modified')
+    #     with catch_signal(config_modified) as handler:
+    #         c.config = {'general': {'description': 'changed again'}}
+    #         c.full_clean()
+    #         c.save()
+    #         handler.assert_called_once()
+    #         self.assertEqual(c.status, 'modified')

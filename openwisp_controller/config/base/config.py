@@ -1,7 +1,7 @@
 import collections
 
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
-from django.db import models
+from django.db import models, transaction
 from django.utils.translation import ugettext_lazy as _
 from jsonfield import JSONField
 from model_utils import Choices
@@ -291,12 +291,14 @@ class AbstractConfig(BaseConfig):
         Emits ``config_modified`` signal.
         Called also by Template when templates of a device are modified
         """
-        config_modified.send(
-            sender=self.__class__,
-            instance=self,
-            # kept for backward compatibility
-            config=self,
-            device=self.device,
+        transaction.on_commit(
+            lambda: config_modified.send(
+                sender=self.__class__,
+                instance=self,
+                # kept for backward compatibility
+                config=self,
+                device=self.device,
+            )
         )
 
     def _send_config_status_changed_signal(self):
