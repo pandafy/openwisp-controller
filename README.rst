@@ -61,6 +61,8 @@ Other popular building blocks that are part of the OpenWISP ecosystem are:
   of the state of the network
 - `openwisp-ipam <https://github.com/openwisp/openwisp-ipam>`_:
   it allows to manage the IP address space of networks
+- `openwisp-notifications <https://github.com/openwisp/openwisp-notifications>`_:
+  it allows to create and manage notifications from the network.
 
 .. image:: https://raw.githubusercontent.com/openwisp/openwisp2-docs/master/assets/design/openwisp-logo-black.svg
   :target: http://openwisp.org
@@ -96,6 +98,10 @@ Install from pypi:
 .. code-block:: shell
 
     pip install openwisp-controller
+
+    # Install optional dependencies for notifications
+    pip install openwisp-controller[notifications]
+
 
 Install development version
 ---------------------------
@@ -553,6 +559,42 @@ their hardware ID instead of their name.
 
 If you still want to reference devices by their name, set this to ``False``.
 
+Notifications
+-------------
+
+If you wish to use notifications, make sure you have
+`installed required dependencies <#install-stable-version-from-pypi>`_.
+You will need to do following changes in your project.
+
+Add notification apps to `INSTALLED_APPS` in `settings.py`:
+
+.. code-block:: python
+
+    INSTALLED_APPS = [
+        ...
+        # openwisp2 modules
+        'openwisp_controller.config',
+        'openwisp_controller.pki',
+        'openwisp_controller.geo',
+        'openwisp_controller.connection',
+        'openwisp_controller.notifications', # <----
+        'openwisp_users',
+        'openwisp_notifications',            # <----
+        # openwisp2 admin theme
+        # (must be loaded here)
+        'openwisp_utils.admin_theme',
+        'django.contrib.admin',
+        'django.forms',
+        ...
+    ]
+
+**Note**: The order of applications in ``INSTALLED_APPS`` should be maintained,
+otherwise it might not work properly.
+
+After configuring ``INSTALLED_APPS``, please follow `setup guide of openwisp-notifications <https://github.com/openwisp/openwisp-notifications#setup-integrate-into-an-existing-django-project>`_
+to properly configure notifications for your project.
+
+
 Installing for development
 --------------------------
 
@@ -623,7 +665,7 @@ Run quality assurance tests with:
 Install and run on docker
 --------------------------
 
-NOTE: This Docker image is for development purposes only. 
+NOTE: This Docker image is for development purposes only.
 For the official OpenWISP Docker images, see: `docker-openwisp
 <https://github.com/openwisp/docker-openwisp>`_.
 

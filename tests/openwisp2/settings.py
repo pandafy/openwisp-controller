@@ -26,9 +26,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.gis',
-    # openwisp2 admin theme
-    # (must be loaded here)
-    'openwisp_utils.admin_theme',
     # all-auth
     'django.contrib.sites',
     'allauth',
@@ -40,8 +37,12 @@ INSTALLED_APPS = [
     'openwisp_controller.pki',
     'openwisp_controller.geo',
     'openwisp_controller.connection',
+    'openwisp_controller.notifications',
     'openwisp_users',
-    # admin
+    'openwisp_notifications',
+    # openwisp2 admin theme
+    # (must be loaded here)
+    'openwisp_utils.admin_theme',
     'django.contrib.admin',
     'django.forms',
     # other dependencies
@@ -54,9 +55,12 @@ INSTALLED_APPS = [
     'rest_framework_gis',
     # channels
     'channels',
-    # 'debug_toolbar',
+    #'debug_toolbar',
 ]
-EXTENDED_APPS = ('django_x509', 'django_loci')
+EXTENDED_APPS = (
+    'django_x509',
+    'django_loci',
+)
 
 AUTH_USER_MODEL = 'openwisp_users.User'
 SITE_ID = 1
@@ -75,8 +79,9 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    # 'debug_toolbar.middleware.DebugToolbarMiddleware',
+    #'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
+
 # INTERNAL_IPS = ['127.0.0.1']
 
 ROOT_URLCONF = 'openwisp2.urls'
@@ -112,6 +117,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'openwisp_utils.admin_theme.context_processor.menu_items',
+                'openwisp_notifications.context_processors.notification_api_settings',
             ],
         },
     }
